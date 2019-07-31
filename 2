@@ -1,0 +1,87 @@
+using System;
+using System.Linq;
+
+namespace task_planer
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var tasks = Console.ReadLine().Split().ToList();
+            string commands = string.Empty;
+            int numCompleted = 0;
+            int numIncomplete = 0;
+            int numDropped = 0;
+
+            while ((commands = Console.ReadLine()) != "End")
+            {
+                var command = commands.Split().ToList();
+
+                if (command[0] == "Complete")
+                {
+                    int index = int.Parse(command[1]);
+                    if (tasks.Count >= index)
+                    {
+                        tasks.RemoveAt(index);
+                        tasks.Insert(index, "0");
+                    }
+                }
+                else if (command[0] == "Change")
+                {
+                    int index = int.Parse(command[1]);
+                    if (tasks.Count >= index)
+                    {
+                        tasks.RemoveAt(index);
+                        tasks.Insert(index, command[2]);
+                    }
+                }
+                else if (command[0] == "Drop")
+                {
+                    int index = int.Parse(command[1]);
+                    if (tasks.Count >= index)
+                    {
+                        tasks.RemoveAt(index);
+                        tasks.Insert(index, "-1");
+                    }
+                }
+                else if (command[0] == "Count")
+                {
+
+                    foreach (var item in tasks)
+                    {
+
+                        if (int.Parse(item) == 0 && command[1] == "Completed")
+                        {
+                            numCompleted += 1;
+                        }
+                        else if (int.Parse(item) > 0 && command[1] == "Incomplete" && int.Parse(item) < 5)
+                        {
+                            numIncomplete += 1;
+                        }
+                        else if (item == "-1" && command[1] == "Dropped")
+                        {
+                            numDropped = numDropped + 1;
+
+                        }
+
+                    }
+                }
+            }
+            if (numCompleted > 0)
+            {
+                Console.WriteLine(numCompleted);
+            }
+            else if (numIncomplete > 0)
+            {
+                Console.WriteLine(numIncomplete);
+            }
+            else if (numDropped > 0)
+            {
+                Console.WriteLine(numDropped);
+            }
+
+            //Console.WriteLine(string.Join(" ", tasks));
+            Console.WriteLine(string.Join(" ", tasks.Where(x => x != "-1" && x != "0")));
+        }
+    }
+}
